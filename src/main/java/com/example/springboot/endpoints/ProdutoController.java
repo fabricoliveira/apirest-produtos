@@ -15,12 +15,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/produtos")
 public class ProdutoController {
 
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    @GetMapping("/produtos")
+    @GetMapping
     public ResponseEntity<List<ProdutoEntity>> getAllProdutos() {
         List<ProdutoEntity> produtos = produtoRepository.findAll();
         if(produtos.isEmpty()) {
@@ -33,7 +34,7 @@ public class ProdutoController {
         return new ResponseEntity<List<ProdutoEntity>>(produtos, HttpStatus.OK);
     }
 
-    @GetMapping("/produtos/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ProdutoEntity> getProduto(@PathVariable("id") Long id) {
         Optional<ProdutoEntity> produto = produtoRepository.findById(id);
         if(!produto.isPresent()) {
@@ -43,12 +44,12 @@ public class ProdutoController {
         return new ResponseEntity<ProdutoEntity>(produto.get(), HttpStatus.OK);
     }
 
-    @PostMapping("/produtos")
+    @PostMapping
     public ResponseEntity<ProdutoEntity> saveProduto(@RequestBody @Valid ProdutoEntity produto) {
         return new ResponseEntity<ProdutoEntity>(produtoRepository.save(produto), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/produtos/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<ProdutoEntity> deleteProduto(@PathVariable("id") Long id) {
         Optional<ProdutoEntity> produto = produtoRepository.findById(id);
         if(!produto.isPresent()) {
@@ -58,7 +59,7 @@ public class ProdutoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/produtos/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ProdutoEntity> updateProduto(@PathVariable("id") Long id, @RequestBody ProdutoEntity produto) {
         Optional<ProdutoEntity> produtoOptional = produtoRepository.findById(id);
         if(!produtoOptional.isPresent()) {
