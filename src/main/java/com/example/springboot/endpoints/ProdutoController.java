@@ -11,6 +11,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 public class ProdutoController {
 
@@ -23,6 +26,10 @@ public class ProdutoController {
         if(produtos.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        produtos.forEach(produto -> {
+            Long id = produto.getId();
+            produto.add(linkTo(methodOn(ProdutoController.class).getProduto(id)).withSelfRel());
+        });
         return new ResponseEntity<List<ProdutoEntity>>(produtos, HttpStatus.OK);
     }
 
@@ -32,6 +39,7 @@ public class ProdutoController {
         if(!produto.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        produto.get().add(linkTo(methodOn(ProdutoController.class).getAllProdutos()).withRel("Lista de Produtos"));
         return new ResponseEntity<ProdutoEntity>(produto.get(), HttpStatus.OK);
     }
 
